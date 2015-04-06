@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:gravity="center">
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/identity_label"
+            android:layout_gravity="center"
+            android:padding="24dp"
+            />
+
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+
+        <EditText android:layout_width="wrap_content" android:layout_height="match_parent"
+                android:minWidth="15dp"
+                android:hint="@string/your_name"
+                android:id="@+id/identity_box"/>
+
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:id="@+id/ok_button"
+                android:text="@string/ok_button_text"/>
+    </LinearLayout>
+
+</LinearLayout>
+

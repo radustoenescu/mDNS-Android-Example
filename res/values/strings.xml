@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ping Pong</string>
+    <string name="ok_button_text">Ok</string>
+    <string name="false_button_text">False</string>
+    <string name="identity_label">Who are you ?</string>
+    <string name="your_name">Your name</string>
+</resources>

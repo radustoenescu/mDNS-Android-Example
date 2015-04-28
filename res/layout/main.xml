@@ -10,7 +10,6 @@
             android:layout_height="wrap_content"
             android:text="@string/identity_label"
             android:layout_gravity="center"
-            android:padding="24dp"
             />
 
     <LinearLayout
@@ -28,6 +27,16 @@
                 android:id="@+id/ok_button"
                 android:text="@string/ok_button_text"/>
     </LinearLayout>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Discovered Peers"
+            android:id="@+id/discovered_peers_label" android:layout_gravity="center_horizontal"/>
+    <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/peer_list" android:layout_gravity="center_horizontal"/>
 
 </LinearLayout>
 

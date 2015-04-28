@@ -13,19 +13,18 @@ import java.net.Socket;
  * Author: Radu Stoenescu
  * Don't be a stranger to pingpong.7.radustoe@spamgourmet.com
  *
- * Code for a simple TCP "echo"-like serve.
+ * Code for a simple TCP "echo"-like server.
  */
-public class PongServer {
-    private static String TAG = "Server";
-    private static String RESPONSE = "Pong";
+public class TCPServer {
+    private static final String LOG_TAG = "Server";
+    private static final String RESPONSE = "Pong";
 
     private ServerSocket serverSocket;
     private Socket clientSocket;
-    private boolean alive;
+    private volatile boolean alive;
 
     /**
-     * On what port does to serve run ?
-     * @return serve TCP port
+     * @return local port on which the server runs.
      */
     public int listenPort() {
         if (serverSocket != null)
@@ -35,15 +34,25 @@ public class PongServer {
     }
 
     /**
-     * Constructor that starts the serve and binds it to the provided address.
+     * @return INetAddr of the server.
+     */
+    public InetAddress listenAddress() {
+        if (serverSocket != null)
+            return  serverSocket.getInetAddress();
+        else
+            throw new IllegalStateException("ServerSocket is null, probably not closed or not initialized");
+    }
+
+    /**
+     * Constructor that starts the server and binds it to the provided address.
      * @param bindAddress Server IP address.
      * @throws IOException
      */
-    public PongServer(final InetAddress bindAddress) throws IOException {
+    public TCPServer(final InetAddress bindAddress) throws IOException {
 //        We are not using a predefined port, it will be provided by the system and then advertised to other peers
         serverSocket = new ServerSocket(0, 10, bindAddress);
         alive = true;
-//        Requests will be served from a standlaone thread
+//        Requests will be served from a standalone thread
         new Thread(new Runnable() {
             public void run() {
                 try {
@@ -51,14 +60,14 @@ public class PongServer {
                     while (alive) {
                         // Wait for a connection
                         clientSocket = serverSocket.accept();
-                        Log.d(TAG, "Request received from: " + clientSocket.getRemoteSocketAddress().toString());
+                        Log.d(LOG_TAG, "Request received from: " + clientSocket.getRemoteSocketAddress().toString());
                         //Service the connection
                         serve(clientSocket);
                     }
 //                    When killed, release resources.
                     serverSocket.close();
                 } catch (IOException ioe) {
-                    Log.e(TAG, "Error in PongServer: " + ioe.getMessage());
+                    Log.e(LOG_TAG, "Error in TCPServer: " + ioe.getMessage());
                 }
             }
         }).start();
@@ -69,30 +78,42 @@ public class PongServer {
      * @param client socket the request is originated
      * @throws IOException
      */
-    public static void serve(Socket client) throws IOException {
+    public void serve(Socket client) throws IOException {
         DataInputStream inbound;
         DataOutputStream outbound;
-        String message = "Pong";
+        String request = "";
+        String response;
         try {
             // Acquire the streams for IO
             inbound = new DataInputStream(client.getInputStream());
             outbound = new DataOutputStream(client.getOutputStream());
 
-            message = inbound.readUTF();
-            Log.d(TAG, "Incoming request " + message);
+            request = inbound.readUTF();
+            Log.d(LOG_TAG, "Incoming request " + request);
             client.shutdownInput();
-//            Appending server response
-            message += RESPONSE;
-            outbound.writeUTF(message);
+
+            response = buildResponse(request);
+            outbound.writeUTF(response);
             client.shutdownOutput();
         } finally {
             client.close();
-            Log.d(TAG, "Sent response " + String.valueOf(message));
+            Log.d(LOG_TAG, "Sent response " + String.valueOf(request));
         }
     }
 
     /**
-     * Signals the server to halt the loop.
+     * This method should be overwritten by more complicated server implementations.
+     *
+     * It dictates what string response is sent back to a client, based on client's request.
+     * @param request Client's request
+     * @return String representation of the response.
+     */
+    protected String buildResponse(String request) {
+        return request + " " + RESPONSE;
+    }
+
+    /**
+     * Gracefully signals the server to halt the loop.
      */
     public void kill() {
         alive = false;

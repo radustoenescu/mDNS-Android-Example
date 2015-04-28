@@ -11,7 +11,8 @@ import java.net.Socket;
  * Code for sending a string request to a serve via a TCP client socket and
  * receiving its response.
  */
-public class PingClient {
+public class TCPClient {
+
     /**
      * Sends a string via a TCP socket (in UTF format), waits for a response and returns it (also UTF string).
      * @param str Request
@@ -42,7 +43,7 @@ public class PingClient {
     }
 
     /**
-     * Convenience wrapper method.
+     * Convenience wrapper method, it builds an INetAddr form a string host name.
      * @param str
      * @param host
      * @param port

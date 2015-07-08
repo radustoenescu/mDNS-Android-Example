@@ -1,4 +1,4 @@
-PingPong
-========
+mDNS + TCP sample Android app
+=============================
 
-A simple ping - pong client server application for Android that uses multicast DNS(mDNS) for service discovery within a local WiFi network. 
+A simple echo - reply client server application for Android that uses multicast DNS(mDNS) for service discovery within a local WiFi network. 
